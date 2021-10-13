@@ -6,12 +6,19 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            char[,] Field = new char[10, 10];
-            Field = CreateField();
-            ShowField (Field);
+            char[,] field = new char[10, 10];
+            string[] ships = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
+            int[] shipsLengths = {5,4,3,3,2};
+            field = CreateField();
+            ShowField (field);
+            for(int i =0; i < 5 ;i++)
+            {
             Console.WriteLine("Enter coordinates of ship:");
             string coordinates = Console.ReadLine();
             int[] numberCoordinates = CheckCoordinates(coordinates);
+            field = SetShip(field,numberCoordinates,shipsLengths[i]);
+            ShowField (field);
+            }
         }
 
         static char[,] CreateField()
@@ -76,6 +83,31 @@ namespace Main
             numberCoords[1] = (Int32.Parse(halfCoords[0].Substring(1)) -1);
             numberCoords[3] = (Int32.Parse(halfCoords[1].Substring(1)) -1);
             return numberCoords;
+        }
+
+        static char[,] SetShip(char[,] field, int[] coords, int length)
+        {
+            if (coords[0] == coords[2])
+            {
+                if (coords[1] - coords[3] == length - 1 || coords[3] - coords[1] == length - 1)
+                {
+                    for (int j = coords[1]; j <= coords[3]; j++)
+                    {
+                        field[coords[0], j] = 'O';
+                    }
+                }
+            }
+            if (coords[1] == coords[3])
+            {
+                if (coords[0] - coords[2] == length - 1 || coords[2] - coords[0] == length - 1)
+                {
+                    for (int j = coords[0]; j <= coords[2]; j++)
+                    {
+                        field[j, coords[1]] = 'O';
+                    }
+                }
+            }
+            return field;
         }
     }
 }
