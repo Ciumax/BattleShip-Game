@@ -9,15 +9,18 @@ namespace Main
             char[,] field = new char[10, 10];
             string[] ships = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
             int[] shipsLengths = {5,4,3,3,2};
+            int aliveShips = 0;
             field = CreateField();
             ShowField (field);
-            for(int i =0; i < 5 ;i++)
+            for (int i = 0; i < 5; i++) /// testing loop
             {
-            Console.WriteLine("Enter coordinates of ship:");
-            string coordinates = Console.ReadLine();
-            int[] numberCoordinates = CheckCoordinates(coordinates);
-            field = SetShip(field,numberCoordinates,shipsLengths[i]);
-            ShowField (field);
+                Console.WriteLine("Enter coordinates of ship:  (eg. F3 F7)");
+                string coordinates = Console.ReadLine();
+                int[] numberCoordinates = CheckCoordinates(coordinates);
+                field = SetShip(field, numberCoordinates, shipsLengths[i]);
+                aliveShips = CountAliveShips(field);
+                ShowField(field);
+
             }
         }
 
@@ -108,6 +111,21 @@ namespace Main
                 }
             }
             return field;
+        }
+        static int CountAliveShips(char[,] field)
+        {
+            int aliveShips = 0;
+            for (int i = 0; i < field.GetLength(0); i++)
+            {
+                for (int j = 0; j < field.GetLength(1); j++)
+                {
+                    if(field[i, j] == 'O')
+                    {
+                        aliveShips++;
+                    }
+                }
+            }
+            return aliveShips;
         }
     }
 }
