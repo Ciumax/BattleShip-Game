@@ -6,20 +6,35 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            char[,] field = new char[10, 10];
+            char[,] playerOnefield = new char[10, 10];
+            char[,] playerTwofield = new char[10, 10];
             string[] ships = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
             int[] shipsLengths = {5,4,3,3,2};
-            int aliveShips = 0;
-            field = CreateField();
-            ShowField (field);
-            for (int i = 0; i < 5; i++) /// testing loop
+            int playerOneAliveShips = 0; 
+            int playerTwoAliveShips = 0; 
+            playerOnefield = CreateField();
+            playerTwofield = CreateField();
+            ShowField (playerOnefield);
+
+            for (int i = 0; i < 5;) 
             {
                 Console.WriteLine("Enter coordinates of ship:  (eg. F3 F7)");
                 string coordinates = Console.ReadLine();
                 int[] numberCoordinates = CheckCoordinates(coordinates);
-                field = SetShip(field, numberCoordinates, shipsLengths[i]);
-                aliveShips = CountAliveShips(field);
-                ShowField(field);
+                if (CheckSpace(playerOnefield, numberCoordinates,shipsLengths[i]))
+                {
+                    playerOnefield = SetShip(playerOnefield, numberCoordinates, shipsLengths[i]);
+                    i++;
+                    ShowField(playerOnefield);
+                }
+                else
+                {
+                    ShowField(playerOnefield);
+                    Console.WriteLine("Wrong place or length, try another coordinates!");
+                    
+                }
+                playerOneAliveShips = CountAliveShips(playerOnefield);
+                
 
             }
         }
@@ -92,21 +107,21 @@ namespace Main
         {
             if (coords[0] == coords[2])
             {
-                if (coords[1] - coords[3] == length - 1 || coords[3] - coords[1] == length - 1)
+                for (int i = coords[0]; i <= coords[2]; i++)
                 {
                     for (int j = coords[1]; j <= coords[3]; j++)
                     {
-                        field[coords[0], j] = 'O';
+                        field[i, j] = 'O';
                     }
                 }
             }
             if (coords[1] == coords[3])
             {
-                if (coords[0] - coords[2] == length - 1 || coords[2] - coords[0] == length - 1)
+                for (int i = coords[0]; i <= coords[2]; i++)
                 {
-                    for (int j = coords[0]; j <= coords[2]; j++)
+                    for (int j = coords[1]; j <= coords[3]; j++)
                     {
-                        field[j, coords[1]] = 'O';
+                        field[i, j] = 'O';
                     }
                 }
             }
@@ -126,6 +141,60 @@ namespace Main
                 }
             }
             return aliveShips;
+        }
+        static bool CheckSpace(char[,] field, int[] coords, int length)
+        {
+            if (coords[0] > 9 || coords[1] > 9 || coords[2] > 9 || coords[3] > 9 || coords[0] < 0 || coords[1] < 0 || coords[2] < 0 || coords[3] < 0)
+            {
+                return false;
+            }
+            if (coords[0] == coords[2])
+            {
+                if (coords[1] - coords[3] == length - 1 || coords[3] - coords[1] == length - 1)
+                {
+                    for (int i = coords[0] - 1; i <= coords[2] + 1; i++)
+                    {
+                        for (int j = coords[1] - 1; j <= coords[3] + 1; j++)
+                        {
+                            if (field[i, j] == 'O')
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            if (coords[1] == coords[3])
+            {
+                if (coords[0] - coords[2] == length - 1 || coords[2] - coords[0] == length - 1)
+                {
+                    for (int i = coords[0]; i <= coords[2]; i++)
+                    {
+                        for (int j = coords[1]; j <= coords[3]; j++)
+                        {
+                            if (field[i, j] == 'O')
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        static char[,] TakeTheShoot(char[,] field, int[] target)
+        {
+            
+            /// TODO
+            return field;
         }
     }
 }
