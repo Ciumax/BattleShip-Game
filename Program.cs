@@ -33,10 +33,15 @@ namespace Main
                     Console.WriteLine("Wrong place or length, try another coordinates!");
                     
                 }
+                
                 playerOneAliveShips = CountAliveShips(playerOnefield);
                 
 
             }
+            Console.WriteLine("Take the shoot! (eg F3)");
+            string shootCoordinates = Console.ReadLine();
+            TakeTheShoot(playerOnefield, shootCoordinates);
+            ShowField(playerOnefield);
         }
 
         static char[,] CreateField()
@@ -144,10 +149,6 @@ namespace Main
         }
         static bool CheckSpace(char[,] field, int[] coords, int length)
         {
-            if (coords[0] > 9 || coords[1] > 9 || coords[2] > 9 || coords[3] > 9 || coords[0] < 0 || coords[1] < 0 || coords[2] < 0 || coords[3] < 0)
-            {
-                return false;
-            }
             if (coords[0] == coords[2])
             {
                 if (coords[1] - coords[3] == length - 1 || coords[3] - coords[1] == length - 1)
@@ -156,10 +157,14 @@ namespace Main
                     {
                         for (int j = coords[1] - 1; j <= coords[3] + 1; j++)
                         {
-                            if (field[i, j] == 'O')
+                            if (i <= 9 && i >= 0 && j <= 9 && j >= 0)
                             {
-                                return false;
+                                if (field[i, j] == 'O')
+                                {
+                                    return false;
+                                }
                             }
+                            else continue;
                         }
                     }
                 }
@@ -172,14 +177,19 @@ namespace Main
             {
                 if (coords[0] - coords[2] == length - 1 || coords[2] - coords[0] == length - 1)
                 {
-                    for (int i = coords[0]; i <= coords[2]; i++)
+                    for (int i = coords[0] - 1; i <= coords[2] + 1; i++)
                     {
-                        for (int j = coords[1]; j <= coords[3]; j++)
+                        for (int j = coords[1] - 1; j <= coords[3] + 1; j++)
                         {
-                            if (field[i, j] == 'O')
+                           
+                            if (i <= 9 && i >= 0 && j <= 9 && j >= 0)
                             {
-                                return false;
+                                if (field[i, j] == 'O')
+                                {
+                                    return false;
+                                }
                             }
+                            else continue;
                         }
                     }
                 }
@@ -190,10 +200,32 @@ namespace Main
             }
             return true;
         }
-        static char[,] TakeTheShoot(char[,] field, int[] target)
+        static char[,] TakeTheShoot(char[,] field, string target)
         {
-            
-            /// TODO
+            int[] shootCoords = new int[2];
+            switch (target.Substring(0, 1))
+            {
+                case "A": shootCoords[0] = 0; break;
+                case "B": shootCoords[0] = 1; break;
+                case "C": shootCoords[0] = 2; break;
+                case "D": shootCoords[0] = 3; break;
+                case "E": shootCoords[0] = 4; break;
+                case "F": shootCoords[0] = 5; break;
+                case "G": shootCoords[0] = 6; break;
+                case "H": shootCoords[0] = 7; break;
+                case "I": shootCoords[0] = 8; break;
+                case "J": shootCoords[0] = 9; break;
+            }
+            shootCoords[1] = (Int32.Parse(target.Substring(1)) - 1);
+
+            if (field[shootCoords[0], shootCoords[1]] == 'O')
+            {
+                field[shootCoords[0], shootCoords[1]] = 'X';
+            }
+            else
+            {
+                field[shootCoords[0], shootCoords[1]] = 'M';
+            }
             return field;
         }
     }
